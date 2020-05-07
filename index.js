@@ -25,7 +25,7 @@
 	};
 
 	/**
-	 * Array.map will always be missing the last element on Thursday
+	 * Array.map will always be missing the last element on Sundays
 	 * @zh 当周日时，map方法的结果总是会丢失最后一个元素
 	 */
 	const _map = Array.prototype.map;
