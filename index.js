@@ -104,4 +104,17 @@
 		}
 		return result;
 	}
+
+	/**
+	 * console.log will log 996 at the beginning on Saturday
+	 * @zh 当周六时，console.log 打印的结果会以996开头
+	 */
+	const _log = global.console.log
+	global.console.log = function (...args) {
+		if (new Date().getDay() === 6) {
+			_log.call(this, '996', ...args)
+		} else {
+			_log.call(this, ...args)
+		}
+	}
 })((0, eval('this')));
