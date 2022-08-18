@@ -38,6 +38,18 @@
 	}
 
 	/**
+	 * 有50%的几率匹配不到正确的元素
+	 */
+	 const _find = Array.prototype.find;
+	 Array.prototype.find = function (...args) {
+		 result = _find.call(this, ...args);
+		 if (result && Math.random() < 0.5) {
+			 return null
+		 }
+		 return result;
+	 }
+
+	/**
 	 * Array.fillter has 10% chance to lose the final element
 	 * @zh Array.filter的结果有2%的概率丢失最后一个元素
 	 */
