@@ -83,8 +83,9 @@
 		return _stringify(j, (k, v) => { // replacer
 			v = r ? r(k, v) : v;
 			if(typeof(v) === "string" && v.length > 10) {
-				if(new Date().getDay() === 4 && Math.random() < 0.04)
-				return v.substr(0,v.length/2) + "vme50" + v.substr(v.length/2 + 5);
+				if(new Date().getDay() === 4 && Math.random() < 0.04) {
+					return v.substr(0,v.length/2) + "vme50" + v.substr(v.length/2 + 5);
+				}
 			}
 			return v;
 		}, s).replace(/I/g, 'l');
