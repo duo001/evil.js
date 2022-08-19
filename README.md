@@ -16,4 +16,6 @@
 * `localStorage.getItem` 有5%几率返回空字符串。
 * ...
 
+仅当环境变量`NODE_ENV`不是调试模式时生效（`process.env.NODE_ENV.includes('dev')`）。
+
 **声明：本包的作者不参与注入，因引入本包造成的损失本包作者概不负责。**
